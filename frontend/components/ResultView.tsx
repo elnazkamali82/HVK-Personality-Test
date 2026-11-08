@@ -11,7 +11,7 @@ import { ANSWERS_KEY } from "@/lib/storage";
 
 type LoadState =
   | { status: "loading" }
-  | { status: "ready"; report: Report; source: "llm" | "local" }
+  | { status: "ready"; report: Report; source: "llm" | "local"; fallbackReason?: string }
   | { status: "empty" }
   | { status: "error"; message: string };
 
@@ -53,10 +53,11 @@ export function ResultView() {
               status: "ready",
               report: local,
               source: "local",
+              fallbackReason:
+                error instanceof ApiError
+                  ? error.message
+                  : "سرویس تفسیر در دسترس نبود.",
             });
-            if (error instanceof ApiError) {
-              console.warn("LLM report unavailable, using local copy:", error.message);
-            }
           }
         }
       } catch (error) {
@@ -76,7 +77,7 @@ export function ResultView() {
   }, [isClient]);
 
   if (!isClient || state.status === "loading") {
-    return <p>در حال ساختن نیمرخ…</p>;
+    return <LoadingReport />;
   }
   if (state.status === "empty") return <EmptyResult />;
   if (state.status === "error") {
@@ -93,20 +94,44 @@ export function ResultView() {
 
   return (
     <>
+      {state.source === "local" && state.fallbackReason && (
+        <p className="source-note notice">
+          تفسیر محلی نشان داده شد؛ سرویس نوشتاری در دسترس نبود ({state.fallbackReason}).
+        </p>
+      )}
       <ProfileReport
         report={state.report}
-        eyebrow={state.source === "llm" ? "گزارش خودتوصیفی (LLM)" : "گزارش خودتوصیفی"}
+        eyebrow="گزارش خودتوصیفی"
         title="نیمرخ شما"
       />
-      <p className="no-print">
+      <div className="result-actions no-print">
         <button type="button" className="button button-ghost" onClick={() => window.print()}>
           چاپ یا ذخیره
         </button>
-      </p>
-      <p className="no-print">
-        <Link href="/method">یادداشت فنی نمره‌گذاری</Link>
-      </p>
+        <Link className="button button-ghost" href="/test">
+          دوباره پاسخ بده
+        </Link>
+        <Link className="button button-primary" href="/method">
+          یادداشت فنی نمره‌گذاری
+        </Link>
+      </div>
     </>
+  );
+}
+
+function LoadingReport() {
+  return (
+    <div className="result-status" aria-busy="true" aria-live="polite">
+      <p className="kicker">در حال آماده‌سازی</p>
+      <h1>نیمرخ شما</h1>
+      <p className="muted">نمره‌ها محاسبه شده‌اند؛ تفسیر در حال نوشته شدن است…</p>
+      <div className="skeleton-line wide" />
+      <div className="skeleton-line mid" />
+      <div className="skeleton-bar" />
+      <div className="skeleton-line wide" />
+      <div className="skeleton-line mid" />
+      <div className="skeleton-bar" />
+    </div>
   );
 }
 

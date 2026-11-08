@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-export function SiteHeader() {
+export function SiteHeader({ tone = "default" }: { tone?: "default" | "hero" }) {
   return (
-    <header className="site-header">
+    <header className={tone === "hero" ? "site-header site-header-hero" : "site-header"}>
       <Link className="brand" href="/">
         پنج‌رخ
       </Link>

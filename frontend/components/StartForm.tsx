@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ADULT_KEY } from "@/lib/storage";
 
-export function StartForm() {
+export function StartForm({ variant = "panel" }: { variant?: "panel" | "hero" }) {
   const router = useRouter();
   const [adult, setAdult] = useState(false);
 
   return (
     <form
-      className="panel"
+      className={variant === "hero" ? "hero-cta" : "panel"}
       onSubmit={(event) => {
         event.preventDefault();
         if (!adult) return;
@@ -26,7 +26,7 @@ export function StartForm() {
         />
         <span>۱۸ سال یا بیشتر دارم و این نتیجه را فقط برای خودشناسی می‌خواهم.</span>
       </label>
-      <button className="button button-primary" type="submit" disabled={!adult}>
+      <button className="button button-primary button-lg" type="submit" disabled={!adult}>
         شروع آزمون
       </button>
     </form>

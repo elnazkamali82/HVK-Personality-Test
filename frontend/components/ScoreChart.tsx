@@ -55,7 +55,7 @@ export function ScoreChart({ domains }: { domains: DomainScore[] }) {
         <DomainScoreRow key={domain.id} domain={domain} />
       ))}
       <p className="muted">
-        خط کهربایی مرکز مقیاس پاسخ است. ۵۰ در این نمودار میانگین جامعه نیست.
+        خط نارنجی‌فام مرکز مقیاس پاسخ است. ۵۰ در این نمودار میانگین جامعه نیست.
       </p>
     </div>
   );

@@ -1,8 +1,10 @@
 """Scoring boundary for a later API.
 
 The live prototype scores in the Next.js app (`frontend/lib/scoring.ts`)
-so this service stays unimplemented. When scoring moves here, keep these
-rules:
+so this service stays unimplemented. Narrative generation is served at
+``POST /api/v1/assessment/report`` from an already-scored profile.
+
+When scoring moves here, keep these rules:
 
 - Score only the 30 core items (agreement and frequency).
 - Situational and preference items stay qualitative.

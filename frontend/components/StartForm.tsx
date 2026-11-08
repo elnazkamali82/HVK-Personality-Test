@@ -15,8 +15,11 @@ export function StartForm() {
         router.push("/test");
       }}
     >
-      <button className="start-orb" type="submit" aria-label="شروع آزمون">
-        شروع
+      <button className="start-cta" type="submit">
+        شروع کنیم
+        <span className="start-cta-arrow" aria-hidden="true">
+          ←
+        </span>
       </button>
     </form>
   );

@@ -8,6 +8,21 @@ export interface DomainNarrative {
   text: string;
 }
 
+export interface FunMatch {
+  name: string;
+  why: string;
+}
+
+/** Playful analyst block from LLM (or local fallback). */
+export interface FunReport {
+  voice: string;
+  animal: FunMatch;
+  character: FunMatch;
+  food: FunMatch;
+  career: FunMatch;
+  place: FunMatch;
+}
+
 export interface Report {
   overview: string;
   domains: DomainScore[];
@@ -20,6 +35,7 @@ export interface Report {
   strengths: string[];
   challenges: string[];
   suggestions: string[];
+  fun: FunReport;
 }
 
 const DOMAIN_TEXT: Record<DomainId, Record<Pole, string>> = {
@@ -315,6 +331,133 @@ function suggestionsFor(pole: Record<DomainId, Pole>): string[] {
   return items;
 }
 
+const FUN_BY_PEAK: Record<
+  DomainId,
+  Pick<FunReport, "animal" | "character" | "food" | "career" | "place">
+> = {
+  E: {
+    animal: {
+      name: "طوطی سخنگو",
+      why: "با این برون‌گرایی، انگار هر جمعی را به استودیوی زنده تبدیل می‌کنی.",
+    },
+    character: {
+      name: "جینی از علاءالدین",
+      why: "انرژی‌ات شبیه کسی است که از چراغ بیرون می‌آید و مجلس را جمع می‌کند.",
+    },
+    food: {
+      name: "جوجه کباب با دوغ",
+      why: "تند و جمع‌دوست؛ دقیقاً حس یک دورهمی خودمانی.",
+    },
+    career: {
+      name: "میزبانی رویداد یا فروش ارتباطی",
+      why: "جایی که حرف زدن و روشن کردن فضا خودش یک مهارت است.",
+    },
+    place: {
+      name: "تهران · محله‌های پرجنب‌وجوش مرکز",
+      why: "با این باتری اجتماعی، خلوتِ بیش از حد زود خسته‌ات می‌کند.",
+    },
+  },
+  A: {
+    animal: {
+      name: "سگ گله",
+      why: "مراقب جمعی، با گوش‌های تیز برای حال دیگران.",
+    },
+    character: {
+      name: "پادمه از آواتار",
+      why: "همدلی و مراقبت در مرکز قصه‌ات است، نه حاشیه.",
+    },
+    food: {
+      name: "آش رشته",
+      why: "غذایی که انگار برای آشتی دادن یک میز شلوغ اختراع شده.",
+    },
+    career: {
+      name: "مراقبت، آموزش یا هماهنگی تیم",
+      why: "جایی که توجه به آدم‌ها خودش خروجی کار است.",
+    },
+    place: {
+      name: "رشت یا شهرهای ساحلی آرام‌تر شمال",
+      why: "فضایی که هم نفس دارد هم برای رابطه جا می‌گذارد.",
+    },
+  },
+  C: {
+    animal: {
+      name: "مورچه مهندس",
+      why: "نظم و پیگیری در DNA این نیمرخ دیده می‌شود.",
+    },
+    character: {
+      name: "هرمیون گرانجر",
+      why: "لیست کارها را جدی‌تر از جادو می‌گیری.",
+    },
+    food: {
+      name: "کوکو سبزی ترد و مرتب",
+      why: "دقیق، قابل‌برنامه‌ریزی، و بدون آشوب اضافه روی میز.",
+    },
+    career: {
+      name: "مدیریت پروژه یا کیفیت",
+      why: "جایی که تمام‌کردن کار از شروع‌کردن آن مهم‌تر است.",
+    },
+    place: {
+      name: "اصفهان یا شهری با ریتم قابل‌پیش‌بینی",
+      why: "ساختار بیرونی با موتور درونی‌ات هم‌صدا می‌شود.",
+    },
+  },
+  N: {
+    animal: {
+      name: "گربهٔ باموشکاف",
+      why: "زود سیگنال خطر را می‌گیری؛ گاهی زودتر از بقیه.",
+    },
+    character: {
+      name: "اینساید اوت · غم و اضطراب روی صندلی کنترل",
+      why: "دنیای درونت پر از داشبورد هیجانی روشن است.",
+    },
+    food: {
+      name: "حلیم گرم زمستانی",
+      why: "یک کاسه آرامش برای روزهایی که سیستم آلارم روشن است.",
+    },
+    career: {
+      name: "تحلیل ریسک، نویسندگی یا کار دقیق پشت‌صحنه",
+      why: "حساسیت بالا می‌تواند به دقت تبدیل شود، نه فقط تنش.",
+    },
+    place: {
+      name: "یزد یا شهرهای خلوت‌تر با افق باز",
+      why: "کم‌نویز بیرونی به باتری هیجانی‌ات رحم می‌کند.",
+    },
+  },
+  O: {
+    animal: {
+      name: "روباه کنجکاو",
+      why: "همیشه یک سوراخ جدید در دیوار واقعیت پیدا می‌کنی.",
+    },
+    character: {
+      name: "میازاکی · چیهیرو در شهر اشباح",
+      why: "وارد دنیاهای غریب می‌شوی و راه برگشت را هم بلد می‌شوی… تقریباً.",
+    },
+    food: {
+      name: "میرزاقاسمی دودی",
+      why: "آشناست، ولی یک پیچ طعم غیرمنتظره دارد؛ درست مثل سلیقه‌ات.",
+    },
+    career: {
+      name: "طراحی، پژوهش اکتشافی یا محتوای خلاق",
+      why: "جایی که ایدهٔ تازه ارزشمندتر از روتین تکراری است.",
+    },
+    place: {
+      name: "تبریز یا لیسبون",
+      why: "ترکیب بافت فرهنگی و فضای پرسه‌زنی برای ذهن بازیگوش.",
+    },
+  },
+};
+
+function funFor(profile: Profile): FunReport {
+  const ranked = [...profile.domains].sort((a, b) => b.index - a.index);
+  const peak = ranked[0]!;
+  const low = ranked[ranked.length - 1]!;
+  const pack = FUN_BY_PEAK[peak.id];
+  return {
+    voice: `در نیمرخت ${peak.name} با ${fa(peak.index)} روشن‌ترین چراغ است و ${low.name} با ${fa(low.index)} کم‌نورترین. از همین جا همزادت را در جهان می‌خوانم.`,
+    ...pack,
+  };
+}
+
 export function buildReport(profile: Profile): Report {
   const pole = polesOf(profile);
   const conflict = tagOf(profile, "q06");
@@ -346,5 +489,6 @@ export function buildReport(profile: Profile): Report {
     strengths: linesFor(profile, STRENGTHS),
     challenges: linesFor(profile, CHALLENGES),
     suggestions: suggestionsFor(pole),
+    fun: funFor(profile),
   };
 }

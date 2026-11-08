@@ -25,7 +25,12 @@ export function ReportResult({
           تفسیر محلی نشان داده شد؛ سرویس نوشتاری در دسترس نبود ({fallbackReason}).
         </p>
       )}
-      <ProfileReport report={report} eyebrow={eyebrow} title="نیمرخ شما" />
+      <ProfileReport
+        report={report}
+        eyebrow={eyebrow}
+        title="نیمرخ شما"
+        source={source}
+      />
       <div className="result-actions no-print">
         <button type="button" className="button button-ghost" onClick={() => window.print()}>
           چاپ یا ذخیره

@@ -56,6 +56,7 @@ def _responses_url() -> str:
 
 
 def _schema_hint() -> str:
+    match = {"name": "string", "why": "string"}
     return json.dumps(
         {
             "overview": "string",
@@ -68,6 +69,14 @@ def _schema_hint() -> str:
             "strengths": ["string"],
             "challenges": ["string"],
             "suggestions": ["string"],
+            "fun": {
+                "voice": "string",
+                "animal": match,
+                "character": match,
+                "food": match,
+                "career": match,
+                "place": match,
+            },
         },
         ensure_ascii=False,
         indent=2,

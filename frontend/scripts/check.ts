@@ -68,6 +68,7 @@ assert(threw, "incomplete answers should fail");
 
 const built = buildReport(profile);
 assert(built.domainTexts.length === 5, "five narratives");
+assert(Boolean(built.fun?.voice && built.fun.animal.name && built.fun.food.name), "fun block");
 
 console.log("instrument checks passed");
 console.log(

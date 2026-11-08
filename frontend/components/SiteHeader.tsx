@@ -6,9 +6,9 @@ export function SiteHeader() {
       <Link className="brand" href="/">
         پنج‌رخ
       </Link>
-      <nav className="site-nav">
+      <nav className="site-nav" aria-label="ناوبری اصلی">
         <Link href="/basis">مبانی</Link>
-        <Link href="/sample">نمونه گزارش</Link>
+        <Link href="/sample">نمونه</Link>
       </nav>
     </header>
   );

@@ -1,35 +1,38 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
+from pathlib import Path
 
 from app.schemas.assessment import ProfileSubmission
 
-SYSTEM_PROMPT = """\
-تو نویسندهٔ گزارش خودتوصیفی فارسی برای ابزار پنج‌رخ هستی.
-خروجی فقط JSON ساخت‌یافته است؛ تشخیص بالینی، پیش‌بینی قطعی، یا توصیهٔ استخدام/تحصیلی نده.
+_PROMPT_FILE = Path(__file__).with_name("system_prompt.md")
 
-قواعد:
-- فقط بر اساس اعداد و برچسب‌های کیفی داده‌شده بنویس؛ چیزی اختراع نکن.
-- index تبدیل خطی میانگین ۱–۵ به ۰–۱۰۰ است، نه percentile و نه رتبه نسبت به دیگران.
-- سؤال‌های qualitative داخل نمرهٔ پنج عامل نیستند؛ جدا تفسیرشان کن.
-- pole: high یعنی میانگین ≥ ۳٫۵، low یعنی ≤ ۲٫۵، mid نزدیک مرکز.
-- لحن دقیق، کوتاه، و بدون اغراق. فارسی معیار بنویس.
-- برای هر دامنه دقیقاً یک domainTexts بنویس و id/name را از ورودی کپی کن.
-- strengths و challenges حداکثر ۴ مورد، فقط برای دامنهٔ غیر mid، ترجیحاً دورترین‌ها از مرکز.
-- suggestions بین ۱ تا ۴ مورد عملی برای خودشناسی.
-- interactions فقط اگر ترکیب قطب‌ها معنای روشنی دارد؛ وگرنه آرایه خالی.
-"""
+
+@lru_cache(maxsize=1)
+def load_system_prompt() -> str:
+    """Load the markdown system prompt (cached for process lifetime)."""
+    text = _PROMPT_FILE.read_text(encoding="utf-8").strip()
+    if not text:
+        raise RuntimeError(f"System prompt is empty: {_PROMPT_FILE}")
+    return text
+
+
+def get_system_prompt() -> str:
+    return load_system_prompt()
 
 
 def build_user_prompt(profile: ProfileSubmission) -> str:
     payload = {
         "instrument_version": profile.instrument_version,
         "domains": [d.model_dump() for d in profile.domains],
-        "qualitative": [
-            q.model_dump(by_alias=True) for q in profile.qualitative
-        ],
+        "qualitative": [q.model_dump(by_alias=True) for q in profile.qualitative],
     }
     return (
-        "بر اساس این پروفایل اسکور‌شده، فیلدهای روایی گزارش را پر کن.\n\n"
+        "بر اساس این پروفایل اسکور‌شده، گزارش دو‌لایه بساز:\n"
+        "۱) لایهٔ همزاد (fun): همزاد جانوری، نقش روی پرده، غذای ایرانی، مسیر شغلی، جای زندگی "
+        "(مطمئن و جذاب بنویس؛ نام راوی نساز؛ نگو شوخی یا حدس است)\n"
+        "۲) لایهٔ تحلیلی: overview، domainTexts، و بقیهٔ فیلدهای روایی\n\n"
+        "همه انتخاب‌های لایهٔ همزاد باید به الگوی نمره‌های همین فرد قلاب شوند.\n\n"
         f"{json.dumps(payload, ensure_ascii=False, indent=2)}"
     )

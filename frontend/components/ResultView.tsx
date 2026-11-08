@@ -106,11 +106,18 @@ function LoadingReport() {
     <div className="result-status" aria-busy="true" aria-live="polite">
       <p className="kicker">در حال آماده‌سازی</p>
       <h1>نیمرخ شما</h1>
-      <p className="muted">در حال نوشتن تحلیل توسط هوش مصنوعی…</p>
-      <div className="skeleton-line wide" />
-      <div className="skeleton-line mid" />
-      <div className="skeleton-line wide" />
-      <div className="skeleton-line mid" />
+      <p className="muted">در حال ساخت داشبورد ابعاد و نوشتن تحلیل…</p>
+      <div className="skeleton-board" aria-hidden="true">
+        <div className="skeleton-radar" />
+        <div className="skeleton-tiles">
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line mid" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+        </div>
+      </div>
     </div>
   );
 }

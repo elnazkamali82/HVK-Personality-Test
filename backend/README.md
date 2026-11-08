@@ -48,7 +48,9 @@ Send the profile already scored by the frontend (`scoreProfile`):
 }
 ```
 
-Response matches the frontend `Report` shape (`domainTexts`, `groupBehavior`, …) plus `"source": "llm"`.
+Response matches the frontend `Report` shape (`domainTexts`, `groupBehavior`, `fun`, …) plus `"source": "llm"`.
+
+The LLM system prompt lives in `app/prompts/system_prompt.md` (analytical layer + portrait/`fun` block).
 
 ## LLM provider
 

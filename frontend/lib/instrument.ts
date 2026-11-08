@@ -1,7 +1,7 @@
 import { type DomainId, type FacetId } from "./domains";
 
 export const INSTRUMENT_ID = "panjrakh-36";
-export const INSTRUMENT_VERSION = "0.1.0";
+export const INSTRUMENT_VERSION = "0.1.1";
 export const AUDIENCE = "بزرگسالان ۱۸ سال به بالا";
 
 export type ResponseFormat =
@@ -67,7 +67,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "E",
     facet: "sociability",
     reverse: false,
-    prompt: "بودن در کنار دیگران معمولاً برایم لذت‌بخش است.",
+    prompt: "دورهمی خانوادگی یا جمع دوستانه معمولاً حالم را بهتر می‌کند.",
   },
   {
     kind: "scored",
@@ -105,7 +105,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     kind: "open",
     format: "situational",
     prompt:
-      "فرض کن در یک گروه، دو نفر بر سر نحوه انجام یک کار اختلاف پیدا کرده‌اند و فضا سنگین شده است. احتمالاً چه می‌کنی؟",
+      "در تیم کاری یا پروژه دانشگاهی، دو نفر سر نحوه انجام کار به هم گیر داده‌اند و فضا سنگین شده. احتمالاً چه می‌کنی؟",
     options: [
       { tag: "mediate", label: "سعی می‌کنم حرف هر دو را بشنوم و به یک جمع‌بندی برسم." },
       { tag: "direct", label: "اگر نظر روشنی داشته باشم، همان را صریح می‌گویم تا بحث طولانی نشود." },
@@ -127,7 +127,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "A",
     facet: "compassion",
     reverse: true,
-    prompt: "وارد مشکلات احساسی دیگران نمی‌شوم.",
+    prompt: "درددل یا مشکل شخصی اطرافیان را معمولاً به خودم راه نمی‌دهم.",
   },
   {
     kind: "scored",
@@ -157,7 +157,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     kind: "open",
     format: "situational",
     prompt:
-      "برای برنامه‌ای وقت گذاشته‌ای، اما ناگهان عوض می‌شود و باید بخش زیادی از آن را از نو بچینی. محتمل‌ترین واکنش اولیه‌ات چیست؟",
+      "برای مهمانی، سفر یا قراری وقت گذاشته‌ای، اما ناگهان همه چیز عوض می‌شود و باید از نو بچینی. محتمل‌ترین واکنش اولیه‌ات چیست؟",
     options: [
       { tag: "stress", label: "اول ناراحت یا نگران می‌شوم و کمی طول می‌کشد تا به برنامه جدید فکر کنم." },
       { tag: "replan", label: "سریع سراغ فهرست کارهای جدید می‌روم تا دوباره رشته کار دستم باشد." },
@@ -179,7 +179,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "A",
     facet: "trust",
     reverse: false,
-    prompt: "تا وقتی خلافش را نبینم، برای دیگران حسن نیت قائل می‌شوم.",
+    prompt: "تا وقتی خلافش را نبینم، برای همکار، همسایه یا غریبه‌ای که سر و کار دارم حسن نیت قائل می‌شوم.",
   },
   {
     kind: "scored",
@@ -220,7 +220,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "E",
     facet: "sociability",
     reverse: true,
-    prompt: "اگر بتوانم انتخاب کنم، کارها را تنهایی انجام می‌دهم، نه همراه دیگران.",
+    prompt: "اگر بتوانم انتخاب کنم، کار اداری یا درسی‌ام را تنهایی جلو می‌برم، نه در جمع.",
   },
   {
     kind: "scored",
@@ -236,7 +236,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "C",
     facet: "productiveness",
     reverse: true,
-    prompt: "انجام کارها را به زمان دیگری موکول می‌کنم.",
+    prompt: "در فشار کارهای روزمره، انجام کارها را به زمان دیگری موکول می‌کنم.",
   },
   {
     kind: "scored",
@@ -258,7 +258,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     kind: "open",
     format: "situational",
     prompt:
-      "چند کار ناتمام روی هم جمع شده و همان روز یکی از دوستانت برای کاری که فوری نیست از تو کمک می‌خواهد. چه می‌کنی؟",
+      "چند کار ناتمام روی هم جمع شده و همان روز یکی از دوستانت برای کاری غیرضروری — مثل هماهنگی یا یک درخواست شخصی — از تو کمک می‌خواهد. چه می‌کنی؟",
     options: [
       { tag: "help", label: "کمک را می‌پذیرم، حتی اگر برنامه خودم فشرده‌تر شود." },
       { tag: "boundary", label: "رک می‌گویم امروز نمی‌رسم و زمان دیگری را پیشنهاد می‌کنم." },
@@ -296,7 +296,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     domain: "N",
     facet: "anxiety",
     reverse: false,
-    prompt: "احتمال پیشامدهای بد را زیاد در ذهنم مرور می‌کنم.",
+    prompt: "قبل از امتحان، مصاحبه یا سفر، احتمال پیشامدهای بد را زیاد در ذهنم مرور می‌کنم.",
   },
   {
     kind: "scored",
@@ -360,7 +360,7 @@ const drafts: Array<ScoredDraft | OpenDraft> = [
     kind: "open",
     format: "situational",
     prompt:
-      "باید بین دو گزینه تصمیم بگیری. اطلاعاتت کامل نیست و وقت هم محدود است. معمولاً چه می‌کنی؟",
+      "در صف اداره یا کار اداری باید بین دو گزینه سریع تصمیم بگیری؛ اطلاعاتت کامل نیست و وقت هم محدود است. معمولاً چه می‌کنی؟",
     options: [
       { tag: "commit", label: "با همین اطلاعات یک گزینه را انتخاب می‌کنم تا کار معطل نماند." },
       { tag: "analyze", label: "ابهام‌ها را فهرست می‌کنم و تا جایی که وقت اجازه بدهد دنبال جوابشان می‌گردم." },

@@ -104,6 +104,102 @@ h3 { margin: 1.2rem 0 0.3rem; font-size: 1.05rem; }
 
 .muted { color: var(--muted); }
 
+/* —— Home welcome —— */
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+  animation: rise-in 0.65s ease both;
+}
+
+.home-brand {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2.8rem, 9vw, 4.4rem);
+  letter-spacing: -0.04em;
+}
+
+.home-ai {
+  margin: 0 0 0.7rem;
+  max-width: 28rem;
+  font-size: clamp(1.15rem, 2.8vw, 1.35rem);
+  line-height: 1.75;
+  color: var(--accent-deep);
+  font-weight: 650;
+}
+
+.home-welcome {
+  margin: 0 0 0.35rem;
+  max-width: 24rem;
+  font-size: 1.08rem;
+  color: var(--ink);
+}
+
+.home-meta {
+  margin: 0 0 1.6rem;
+  font-size: 0.95rem;
+}
+
+.home-links {
+  margin: 2.5rem 0 0;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.home-links a { text-decoration: none; }
+
+.start-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 22rem;
+}
+
+.start-orb {
+  width: 10.5rem;
+  height: 10.5rem;
+  border-radius: 50%;
+  border: 0;
+  padding: 0;
+  background: radial-gradient(circle at 35% 30%, #1a8f98, var(--accent) 55%, var(--accent-deep));
+  color: #f4f8fa;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  box-shadow:
+    0 14px 36px rgba(12, 107, 115, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  animation: orb-pulse 2.8s ease-in-out infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.start-orb:hover:not(:disabled) {
+  transform: scale(1.04);
+  box-shadow:
+    0 18px 40px rgba(12, 107, 115, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.start-orb:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.start-orb:disabled {
+  background: linear-gradient(160deg, #9bb8bb, #7f9ea2);
+  box-shadow: 0 8px 20px rgba(19, 32, 41, 0.08);
+  animation: none;
+  cursor: not-allowed;
+  filter: saturate(0.75);
+}
+
+@keyframes orb-pulse {
+  0%, 100% { box-shadow: 0 14px 36px rgba(12, 107, 115, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
+  50% { box-shadow: 0 16px 44px rgba(12, 107, 115, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.22); }
+}
+
 .facts {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -207,44 +303,92 @@ button, .button {
 }
 
 .progress {
-  height: 4px;
+  height: 5px;
   background: var(--line);
   border-radius: 99px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .progress span {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--accent), #14919b);
+  transition: width 0.28s ease;
+}
+
+.test-shell {
+  animation: question-in 0.35s ease both;
+}
+
+.test-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.test-hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  color: var(--muted);
 }
 
 .prompt {
-  font-size: 1.35rem;
+  font-size: clamp(1.25rem, 3.2vw, 1.55rem);
   line-height: 1.75;
-  margin: 0.4rem 0 1rem;
+  margin: 0.2rem 0 1.15rem;
+  font-weight: 700;
 }
 
-.options { display: grid; gap: 0.55rem; margin: 0; padding: 0; border: 0; }
+.options {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.options-scale {
+  gap: 0.5rem;
+}
 
 .option {
   width: 100%;
   text-align: right;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  padding: 0.95rem 1.05rem;
   color: inherit;
   font: inherit;
   line-height: 1.7;
+  min-height: 3.1rem;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 }
 
-.option:hover { border-color: var(--accent); }
+.option:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
 
 .option[aria-checked="true"] {
   background: var(--accent-soft);
   border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+  font-weight: 650;
+}
+
+.actions .button-primary:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(12, 107, 115, 0.18);
+}
+
+@keyframes question-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .option:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible {
@@ -330,6 +474,53 @@ button, .button {
 .report-overview {
   margin: 0 0 1.1rem;
   font-size: 1.08rem;
+}
+
+.analysis-view {
+  animation: rise-in 0.45s ease both;
+}
+
+.analysis-hero .report-overview {
+  margin: 0;
+  font-size: clamp(1.08rem, 2.4vw, 1.22rem);
+  line-height: 1.95;
+}
+
+.analysis-domains h2 {
+  margin-top: 1.4rem;
+}
+
+.analysis-block {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.analysis-block:last-child {
+  border-bottom: 0;
+}
+
+.analysis-block h3 {
+  margin: 0 0 0.25rem;
+  color: var(--accent-deep);
+  font-size: 1.02rem;
+}
+
+.analysis-block p {
+  margin: 0;
+  color: var(--ink);
+}
+
+.analysis-balance {
+  margin-top: 1.2rem;
+}
+
+.result-tech-link {
+  opacity: 0.72;
+  font-size: 0.92rem;
+}
+
+.result-tech-link:hover {
+  opacity: 1;
 }
 
 .report-section {

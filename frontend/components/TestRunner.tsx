@@ -8,10 +8,10 @@ import { ITEMS, type ResponseFormat } from "@/lib/instrument";
 import { ADULT_KEY, ANSWERS_KEY } from "@/lib/storage";
 
 const HINT: Record<ResponseFormat, string> = {
-  agreement: "میزان موافقت، بر اساس رفتار معمول چند ماه اخیر.",
-  frequency: "فراوانی همین رفتار در زندگی واقعی.",
-  situational: "پاسخ درست وجود ندارد. واکنشی را انتخاب کن که در عمل محتمل‌تر است.",
-  preference: "اگر مجبور باشی یکی را انتخاب کنی.",
+  agreement: "بر اساس رفتار معمول چند ماه اخیر.",
+  frequency: "چقدر این رفتار را واقعاً داری.",
+  situational: "واکنشی را انتخاب کن که محتمل‌تر است.",
+  preference: "اگر فقط یکی را بتوانی انتخاب کنی.",
 };
 
 function readAnswers(): Record<string, number> {
@@ -59,6 +59,7 @@ export function TestRunner() {
 
   const item = ITEMS[index];
   const selected = answers[item.id];
+  const isScale = item.format === "agreement" || item.format === "frequency";
 
   function choose(value: number) {
     const next = { ...answers, [item.id]: value };
@@ -68,20 +69,30 @@ export function TestRunner() {
 
   return (
     <section
+      className="test-shell"
+      key={item.id}
       onKeyDown={(event) => {
         const number = Number(event.key);
         if (!Number.isInteger(number) || number < 1 || number > item.options.length) return;
         choose(number);
       }}
     >
+      <div className="test-progress-label">
+        <span>
+          سؤال {fa(item.order)} از {fa(ITEMS.length)}
+        </span>
+        <span>{fa(Math.round(((index + 1) / ITEMS.length) * 100))}٪</span>
+      </div>
       <div className="progress" aria-hidden="true">
         <span style={{ width: `${((index + 1) / ITEMS.length) * 100}%` }} />
       </div>
-      <p className="kicker">
-        سؤال {fa(item.order)} از {fa(ITEMS.length)} · {HINT[item.format]}
-      </p>
+      <p className="test-hint">{HINT[item.format]}</p>
       <h1 className="prompt">{item.prompt}</h1>
-      <div className="options" role="radiogroup" aria-label={item.prompt}>
+      <div
+        className={`options${isScale ? " options-scale" : ""}`}
+        role="radiogroup"
+        aria-label={item.prompt}
+      >
         {item.options.map((option) => {
           const checked = selected === option.value;
           return (

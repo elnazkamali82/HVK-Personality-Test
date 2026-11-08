@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useIsClient } from "@/components/use-is-client";
 import { ReportResult } from "@/components/ReportResult";
 import { ApiError, fetchLlmReport } from "@/lib/api";
-import { buildReport, type Report } from "@/lib/interpret";
+import { buildReport, normalizeReport, type Report } from "@/lib/interpret";
 import { IncompleteAnswers, scoreProfile } from "@/lib/scoring";
 import { ANSWERS_KEY } from "@/lib/storage";
 
@@ -44,7 +44,7 @@ export function ResultView() {
       try {
         const profile = scoreProfile(answers!);
         try {
-          const report = await fetchLlmReport(profile);
+          const report = normalizeReport(await fetchLlmReport(profile));
           if (!cancelled) setState({ status: "ready", report, source: "llm" });
         } catch (error) {
           const local = buildReport(profile);

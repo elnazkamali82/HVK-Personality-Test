@@ -18,7 +18,12 @@ assert(ITEMS.filter((item) => item.format === "situational").length === 4, "situ
 assert(ITEMS.filter((item) => item.format === "preference").length === 2, "preference count");
 
 const prompts = new Set(ITEMS.map((item) => item.prompt));
-assert(prompts.size === 36, "prompts should be unique");
+assert(prompts.size === 36, "canonical prompts should be unique");
+
+for (const item of ITEMS) {
+  assert(item.promptVariants.length >= 2, `${item.id} needs wording variants`);
+  assert(new Set(item.promptVariants).size === item.promptVariants.length, `${item.id} duplicate variants`);
+}
 
 for (const domain of DOMAINS) {
   const items = scored.filter((item) => item.domain === domain.id);

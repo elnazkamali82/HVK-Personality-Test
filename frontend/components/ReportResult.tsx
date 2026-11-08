@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ProfileReport } from "@/components/ProfileReport";
+import { resetSessionPromptVariants } from "@/lib/instrument";
 import type { Report } from "@/lib/interpret";
+import { ANSWERS_KEY } from "@/lib/storage";
 
 export function ReportResult({
   report,
@@ -13,6 +16,7 @@ export function ReportResult({
   source: "llm" | "local";
   fallbackReason?: string;
 }) {
+  const router = useRouter();
   const eyebrow =
     source === "llm"
       ? "تحلیل هوش مصنوعی متخصص"
@@ -35,9 +39,17 @@ export function ReportResult({
         <button type="button" className="button button-ghost" onClick={() => window.print()}>
           چاپ یا ذخیره
         </button>
-        <Link className="button button-ghost" href="/test">
+        <button
+          type="button"
+          className="button button-ghost"
+          onClick={() => {
+            sessionStorage.removeItem(ANSWERS_KEY);
+            resetSessionPromptVariants();
+            router.push("/test");
+          }}
+        >
           دوباره پاسخ بده
-        </Link>
+        </button>
         <Link className="button button-ghost result-tech-link" href="/method">
           یادداشت فنی نمره‌گذاری
         </Link>

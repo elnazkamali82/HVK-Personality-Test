@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ADULT_KEY } from "@/lib/storage";
+import { resetSessionPromptVariants } from "@/lib/instrument";
+import { ADULT_KEY, ANSWERS_KEY } from "@/lib/storage";
 
 export function StartForm() {
   const router = useRouter();
@@ -12,6 +13,8 @@ export function StartForm() {
       onSubmit={(event) => {
         event.preventDefault();
         sessionStorage.setItem(ADULT_KEY, "yes");
+        sessionStorage.removeItem(ANSWERS_KEY);
+        resetSessionPromptVariants();
         router.push("/test");
       }}
     >

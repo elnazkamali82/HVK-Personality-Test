@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     llm_model: str = "gpt-4o-mini"
     llm_api_mode: Literal["auto", "chat", "responses"] = "auto"
     llm_timeout_seconds: float = 90.0
-    llm_temperature: float = 0.4
+    llm_temperature: float = 0.75
 
     model_config = SettingsConfigDict(env_prefix="PANJRAKH_", env_file=".env", extra="ignore")
 

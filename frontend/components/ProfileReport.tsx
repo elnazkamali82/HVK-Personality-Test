@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { DomainScoreRow, ScoreChart } from "@/components/ScoreChart";
 import { RadarChart } from "@/components/RadarChart";
 import { fa } from "@/lib/format";
-import type { FunMatch, FunReport, Report } from "@/lib/interpret";
+import { ensureFun, type FunMatch, type FunReport, type Report } from "@/lib/interpret";
 import type { DomainScore, Pole } from "@/lib/scoring";
 
 type Mode = "dashboard" | "details";
@@ -41,6 +41,10 @@ export function ProfileReport({
   const activeText = useMemo(
     () => report.domainTexts.find((d) => d.id === activeId) ?? report.domainTexts[0],
     [report.domainTexts, activeId],
+  );
+  const fun = useMemo(
+    () => ensureFun(report.fun, report.domains),
+    [report.fun, report.domains],
   );
 
   return (
@@ -113,7 +117,7 @@ export function ProfileReport({
               </p>
             </div>
 
-            <FunPanel fun={report.fun} embedded />
+            <FunPanel fun={fun} embedded />
 
             <div className="ai-answer-block ai-answer-overview">
               <p className="kicker">روایت نیمرخ</p>
@@ -295,7 +299,7 @@ export function ProfileReport({
             </ul>
           </section>
 
-          <FunPanel fun={report.fun} embedded={false} />
+          <FunPanel fun={fun} embedded={false} />
 
           <details className="report-limits">
             <summary>حد این گزارش</summary>

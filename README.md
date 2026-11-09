@@ -39,6 +39,9 @@
 
 ## داکر (راه شاهانه)
 
+پورت‌ها و مبدأهای مجاز در فایل `.env` ریشه تنظیم می‌شوند. نمونهٔ آن در `.env.example` است.
+اگر `files.pythonhosted.org` در شبکهٔ شما resolve نمی‌شود، `PIP_INDEX_URL` را در `.env` به یک mirror معتبر و در دسترس تغییر دهید.
+
 ```bash
 docker compose up --build
 ```

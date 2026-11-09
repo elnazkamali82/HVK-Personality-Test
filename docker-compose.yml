@@ -3,7 +3,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3000:3000"
+      - "${FRONTEND_HOST_PORT:-3010}:3000"
     environment:
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
@@ -14,8 +14,10 @@ services:
   backend:
     build:
       context: ./backend
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
     ports:
-      - "8010:8000"
+      - "${BACKEND_HOST_PORT:-8010}:8000"
     environment:
-      PANJRAKH_CORS_ORIGINS: '["http://localhost:3000","http://127.0.0.1:3000"]'
+      PANJRAKH_CORS_ORIGINS: '${PANJRAKH_CORS_ORIGINS:-["http://localhost:3010","http://127.0.0.1:3010"]}'
     restart: unless-stopped

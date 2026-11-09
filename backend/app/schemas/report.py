@@ -12,6 +12,26 @@ class DomainNarrative(BaseModel):
     text: str = Field(min_length=1)
 
 
+class FunMatch(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, alias_generator=to_camel)
+
+    name: str = Field(min_length=1)
+    why: str = Field(min_length=1)
+
+
+class FunReport(BaseModel):
+    """Playful analyst block — witty, not clinical."""
+
+    model_config = ConfigDict(populate_by_name=True, alias_generator=to_camel)
+
+    voice: str = Field(min_length=1)
+    animal: FunMatch
+    character: FunMatch
+    food: FunMatch
+    career: FunMatch
+    place: FunMatch
+
+
 class NarrativeReport(BaseModel):
     """LLM-produced narrative fields. Domains stay numeric from the scorer."""
 
@@ -27,6 +47,7 @@ class NarrativeReport(BaseModel):
     strengths: list[str]
     challenges: list[str]
     suggestions: list[str] = Field(min_length=1)
+    fun: FunReport
 
 
 class AssessmentReport(BaseModel):
@@ -45,4 +66,5 @@ class AssessmentReport(BaseModel):
     strengths: list[str]
     challenges: list[str]
     suggestions: list[str]
+    fun: FunReport
     source: str = "llm"

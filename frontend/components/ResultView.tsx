@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useIsClient } from "@/components/use-is-client";
-import { ProfileReport } from "@/components/ProfileReport";
+import { ReportResult } from "@/components/ReportResult";
 import { ApiError, fetchLlmReport } from "@/lib/api";
-import { buildReport, type Report } from "@/lib/interpret";
+import { buildReport, normalizeReport, type Report } from "@/lib/interpret";
 import { IncompleteAnswers, scoreProfile } from "@/lib/scoring";
 import { ANSWERS_KEY } from "@/lib/storage";
 
@@ -44,7 +44,7 @@ export function ResultView() {
       try {
         const profile = scoreProfile(answers!);
         try {
-          const report = await fetchLlmReport(profile);
+          const report = normalizeReport(await fetchLlmReport(profile));
           if (!cancelled) setState({ status: "ready", report, source: "llm" });
         } catch (error) {
           const local = buildReport(profile);
@@ -93,29 +93,11 @@ export function ResultView() {
   }
 
   return (
-    <>
-      {state.source === "local" && state.fallbackReason && (
-        <p className="source-note notice">
-          تفسیر محلی نشان داده شد؛ سرویس نوشتاری در دسترس نبود ({state.fallbackReason}).
-        </p>
-      )}
-      <ProfileReport
-        report={state.report}
-        eyebrow="گزارش خودتوصیفی"
-        title="نیمرخ شما"
-      />
-      <div className="result-actions no-print">
-        <button type="button" className="button button-ghost" onClick={() => window.print()}>
-          چاپ یا ذخیره
-        </button>
-        <Link className="button button-ghost" href="/test">
-          دوباره پاسخ بده
-        </Link>
-        <Link className="button button-primary" href="/method">
-          یادداشت فنی نمره‌گذاری
-        </Link>
-      </div>
-    </>
+    <ReportResult
+      report={state.report}
+      source={state.source}
+      fallbackReason={state.fallbackReason}
+    />
   );
 }
 
@@ -124,13 +106,18 @@ function LoadingReport() {
     <div className="result-status" aria-busy="true" aria-live="polite">
       <p className="kicker">در حال آماده‌سازی</p>
       <h1>نیمرخ شما</h1>
-      <p className="muted">نمره‌ها محاسبه شده‌اند؛ تفسیر در حال نوشته شدن است…</p>
-      <div className="skeleton-line wide" />
-      <div className="skeleton-line mid" />
-      <div className="skeleton-bar" />
-      <div className="skeleton-line wide" />
-      <div className="skeleton-line mid" />
-      <div className="skeleton-bar" />
+      <p className="muted">در حال ساخت داشبورد ابعاد و نوشتن تحلیل…</p>
+      <div className="skeleton-board" aria-hidden="true">
+        <div className="skeleton-radar" />
+        <div className="skeleton-tiles">
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line mid" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+        </div>
+      </div>
     </div>
   );
 }

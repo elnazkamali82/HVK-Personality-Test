@@ -1,45 +1,39 @@
-import { SiteHeader } from "@/components/SiteHeader";
-import { StartForm } from "@/components/StartForm";
+import Image from "next/image";
 import Link from "next/link";
+import { StartForm } from "@/components/StartForm";
 
 export default function HomePage() {
   return (
-    <main className="wrap">
-      <SiteHeader />
-      <p className="kicker">خودشناسی · ۱۸ سال به بالا · نسخه ۰.۱</p>
-      <h1>پنج‌رخ</h1>
-      <p className="lead">
-        یک نیمرخ توصیفی از پنج عامل شخصیت، با ۳۶ سؤال کوتاه. هدف، طبقه‌بندی شما در یک تیپ نیست؛
-        دیدن این است که معاشرت، همراهی، پیگیری، حساسیت هیجانی و گشودگی در پاسخ‌های خودتان چطور کنار هم
-        می‌نشینند.
-      </p>
-      <ul className="facts">
-        <li>
-          <strong>۳۶ سؤال</strong>
-          <span className="muted">۳۰ سؤال نمره‌دار و ۶ سؤال کیفی</span>
-        </li>
-        <li>
-          <strong>۸ تا ۱۲ دقیقه</strong>
-          <span className="muted">یک سؤال در هر صفحه</span>
-        </li>
-        <li>
-          <strong>پنج عامل</strong>
-          <span className="muted">بدون برچسب تیپ شخصیتی</span>
-        </li>
-      </ul>
-      <div className="notice">
-        <p>
-          سؤال‌ها برای بزرگسالان نوشته شده‌اند. پاسخ درست وجود ندارد. رفتار معمول چند ماه اخیر را ملاک
-          بگذار، نه حال امروز و نه شخصیتی که دوست داری باشی. این نسخه هنوز روی نمونه واقعی بررسی نشده و
-          ابزار تشخیص یا تصمیم‌گیری درباره دیگران نیست.
-        </p>
-      </div>
-      <StartForm />
-      <p>
-        <Link href="/basis">مبانی علمی و محدودیت‌ها</Link>
-        {" · "}
-        <Link href="/sample">نمونه گزارش یک پاسخ‌دهنده فرضی</Link>
-      </p>
+    <main className="home-shell">
+      <header className="home-top">
+        <Link className="home-logo" href="/">
+          پنج‌رخ
+        </Link>
+        <nav className="home-nav" aria-label="پیوندهای کوتاه">
+          <Link href="/basis">مبانی</Link>
+          <Link href="/sample">نمونه</Link>
+        </nav>
+      </header>
+
+      <section className="home-stage">
+        <div className="home-figure" aria-hidden="true">
+          <Image
+            src="/character.png"
+            alt=""
+            width={720}
+            height={900}
+            priority
+            className="home-character"
+          />
+        </div>
+
+        <div className="home-copy">
+          <h1 className="home-brand">پنج‌رخ</h1>
+          <p className="home-line">آماده‌ای خودت را پیدا کنی؟</p>
+          <p className="home-meta">حدود ده دقیقه · بدون پاسخ درست یا غلط</p>
+          <StartForm />
+        </div>
+      </section>
     </main>
   );
 }

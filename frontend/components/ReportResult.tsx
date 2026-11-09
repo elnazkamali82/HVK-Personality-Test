@@ -1,0 +1,59 @@
+"use client";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ProfileReport } from "@/components/ProfileReport";
+import { resetSessionPromptVariants } from "@/lib/instrument";
+import type { Report } from "@/lib/interpret";
+import { ANSWERS_KEY } from "@/lib/storage";
+
+export function ReportResult({
+  report,
+  source,
+  fallbackReason,
+}: {
+  report: Report;
+  source: "llm" | "local";
+  fallbackReason?: string;
+}) {
+  const router = useRouter();
+  const eyebrow =
+    source === "llm"
+      ? "تحلیل هوش مصنوعی متخصص"
+      : "تفسیر محلی · جایگزین موقت";
+
+  return (
+    <>
+      {source === "local" && fallbackReason && (
+        <p className="source-note notice">
+          تفسیر محلی نشان داده شد؛ سرویس نوشتاری در دسترس نبود ({fallbackReason}).
+        </p>
+      )}
+      <ProfileReport
+        report={report}
+        eyebrow={eyebrow}
+        title="نیمرخ شما"
+        source={source}
+      />
+      <div className="result-actions no-print">
+        <button type="button" className="button button-ghost" onClick={() => window.print()}>
+          چاپ یا ذخیره
+        </button>
+        <button
+          type="button"
+          className="button button-ghost"
+          onClick={() => {
+            sessionStorage.removeItem(ANSWERS_KEY);
+            resetSessionPromptVariants();
+            router.push("/test");
+          }}
+        >
+          دوباره پاسخ بده
+        </button>
+        <Link className="button button-ghost result-tech-link" href="/method">
+          یادداشت فنی نمره‌گذاری
+        </Link>
+      </div>
+    </>
+  );
+}

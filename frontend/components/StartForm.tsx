@@ -1,33 +1,28 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ADULT_KEY } from "@/lib/storage";
+import { resetSessionPromptVariants } from "@/lib/instrument";
+import { ADULT_KEY, ANSWERS_KEY } from "@/lib/storage";
 
 export function StartForm() {
   const router = useRouter();
-  const [adult, setAdult] = useState(false);
 
   return (
     <form
-      className="panel"
+      className="start-form"
       onSubmit={(event) => {
         event.preventDefault();
-        if (!adult) return;
         sessionStorage.setItem(ADULT_KEY, "yes");
+        sessionStorage.removeItem(ANSWERS_KEY);
+        resetSessionPromptVariants();
         router.push("/test");
       }}
     >
-      <label className="check">
-        <input
-          type="checkbox"
-          checked={adult}
-          onChange={(event) => setAdult(event.target.checked)}
-        />
-        <span>۱۸ سال یا بیشتر دارم و این نتیجه را فقط برای خودشناسی می‌خواهم.</span>
-      </label>
-      <button className="button button-primary" type="submit" disabled={!adult}>
-        شروع آزمون
+      <button className="start-cta" type="submit">
+        شروع کنیم
+        <span className="start-cta-arrow" aria-hidden="true">
+          ←
+        </span>
       </button>
     </form>
   );

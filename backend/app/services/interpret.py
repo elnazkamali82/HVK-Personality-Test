@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.prompts.report import SYSTEM_PROMPT, build_user_prompt
+from app.prompts.report import build_user_prompt, get_system_prompt
 from app.schemas.assessment import ProfileSubmission
 from app.schemas.report import AssessmentReport, NarrativeReport
 from app.services.llm import complete_json
@@ -8,7 +8,7 @@ from app.services.llm import complete_json
 
 async def build_llm_report(profile: ProfileSubmission) -> AssessmentReport:
     narrative = await complete_json(
-        system=SYSTEM_PROMPT,
+        system=get_system_prompt(),
         user=build_user_prompt(profile),
         schema=NarrativeReport,
     )
@@ -24,5 +24,6 @@ async def build_llm_report(profile: ProfileSubmission) -> AssessmentReport:
         strengths=narrative.strengths,
         challenges=narrative.challenges,
         suggestions=narrative.suggestions,
+        fun=narrative.fun,
         source="llm",
     )

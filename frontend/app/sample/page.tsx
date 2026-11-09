@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ScoreChart } from "@/components/ScoreChart";
+import { ReportResult } from "@/components/ReportResult";
 import { SiteHeader } from "@/components/SiteHeader";
 import { sampleAnswers } from "@/lib/sample";
 import { scoreProfile } from "@/lib/scoring";
@@ -88,6 +89,7 @@ export default function SamplePage() {
           رتبه‌بندی افراد نیست.
         </p>
       </article>
+      <ReportResult report={sampleReport()} source="llm" />
     </main>
   );
 }

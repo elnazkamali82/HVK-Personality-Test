@@ -1,18 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useIsClient } from "@/components/use-is-client";
-import { ProfileReport } from "@/components/ProfileReport";
-import { buildReport, type Report } from "@/lib/interpret";
-import { scoreProfile } from "@/lib/scoring";
+import { ReportResult } from "@/components/ReportResult";
+import { ApiError, fetchLlmReport } from "@/lib/api";
+import { buildReport, normalizeReport, type Report } from "@/lib/interpret";
+import { IncompleteAnswers, scoreProfile } from "@/lib/scoring";
 import { ANSWERS_KEY } from "@/lib/storage";
 
-function reportFromStorage(): Report | null {
+type LoadState =
+  | { status: "loading" }
+  | { status: "ready"; report: Report; source: "llm" | "local"; fallbackReason?: string }
+  | { status: "empty" }
+  | { status: "error"; message: string };
+
+function answersFromStorage(): Record<string, number> | null {
   const saved = sessionStorage.getItem(ANSWERS_KEY);
   if (!saved) return null;
   try {
-    const answers = JSON.parse(saved) as Record<string, number>;
-    return buildReport(scoreProfile(answers));
+    return JSON.parse(saved) as Record<string, number>;
   } catch {
     return null;
   }
@@ -20,23 +27,98 @@ function reportFromStorage(): Report | null {
 
 export function ResultView() {
   const isClient = useIsClient();
-  if (!isClient) return <p>در حال ساختن نیمرخ…</p>;
+  const [state, setState] = useState<LoadState>({ status: "loading" });
 
-  const report = reportFromStorage();
-  if (!report) return <EmptyResult />;
+  useEffect(() => {
+    if (!isClient) return;
+
+    const answers = answersFromStorage();
+    if (!answers) {
+      setState({ status: "empty" });
+      return;
+    }
+
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const profile = scoreProfile(answers!);
+        try {
+          const report = normalizeReport(await fetchLlmReport(profile));
+          if (!cancelled) setState({ status: "ready", report, source: "llm" });
+        } catch (error) {
+          const local = buildReport(profile);
+          if (!cancelled) {
+            setState({
+              status: "ready",
+              report: local,
+              source: "local",
+              fallbackReason:
+                error instanceof ApiError
+                  ? error.message
+                  : "سرویس تفسیر در دسترس نبود.",
+            });
+          }
+        }
+      } catch (error) {
+        if (cancelled) return;
+        const message =
+          error instanceof IncompleteAnswers
+            ? error.message
+            : "خواندن پاسخ‌ها ممکن نشد.";
+        setState({ status: "error", message });
+      }
+    }
+
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [isClient]);
+
+  if (!isClient || state.status === "loading") {
+    return <LoadingReport />;
+  }
+  if (state.status === "empty") return <EmptyResult />;
+  if (state.status === "error") {
+    return (
+      <div>
+        <h1>گزارش ساخته نشد</h1>
+        <p>{state.message}</p>
+        <Link className="button button-primary" href="/">
+          بازگشت
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <>
-      <ProfileReport report={report} eyebrow="گزارش خودتوصیفی" title="نیمرخ شما" />
-      <p className="no-print">
-        <button type="button" className="button button-ghost" onClick={() => window.print()}>
-          چاپ یا ذخیره
-        </button>
-      </p>
-      <p className="no-print">
-        <Link href="/method">یادداشت فنی نمره‌گذاری</Link>
-      </p>
-    </>
+    <ReportResult
+      report={state.report}
+      source={state.source}
+      fallbackReason={state.fallbackReason}
+    />
+  );
+}
+
+function LoadingReport() {
+  return (
+    <div className="result-status" aria-busy="true" aria-live="polite">
+      <p className="kicker">در حال آماده‌سازی</p>
+      <h1>نیمرخ شما</h1>
+      <p className="muted">در حال ساخت داشبورد ابعاد و نوشتن تحلیل…</p>
+      <div className="skeleton-board" aria-hidden="true">
+        <div className="skeleton-radar" />
+        <div className="skeleton-tiles">
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line mid" />
+          <div className="skeleton-bar" />
+          <div className="skeleton-line wide" />
+          <div className="skeleton-bar" />
+        </div>
+      </div>
+    </div>
   );
 }
 
